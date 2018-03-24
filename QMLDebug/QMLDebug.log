@@ -1,0 +1,17 @@
+QML debugging is enabled. Only use this in a safe environment.
+QML Debugger: Waiting for connection on port 8080...
+qml: print
+qml: log
+qml: debug
+qml: info
+qml: warn
+qml: error
+count: 1
+onCompleted (qrc:/main.qml:13)
+qml: exception: message & stack trace
+onCompleted (qrc:/main.qml:14)
+assert:false message & stack trace
+onCompleted (qrc:/main.qml:16)
+time: 0ms
+Profiling started.
+Profiling ended.
