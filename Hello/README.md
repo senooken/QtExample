@@ -14,7 +14,7 @@ I confirmed following condition.
 * VS Code v1.24.0
 * ms-vscode.cpptools v0.17.4
 
-For intellisense, you need to add your Qt include path to CPATH enviromental variable or "includePath" in .vscode/c_cpp_properties.json.
+For intellisense, you need to add your Qt include path to CPATH enviromental variable or "includePath" in `.vscode/c_cpp_properties.json`.
 
 Qt include path is like "$HOME/.local/opt/Qt/Qt5.10.0/5.10.0/gcc_64/include/QtWidgets".
 
