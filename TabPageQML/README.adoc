@@ -1,0 +1,7 @@
+# TabPageQML
+
+This program is example for Tab page in QML (QtQuick2 with Qt5.10.0).
+
+video::demo.mp4[title=Demo]
+
+Refer to <https://senooken.jp/blog/2018/07/14/> (in Japanese).
