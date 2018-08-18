@@ -71,6 +71,7 @@ ApplicationWindow {
                 onEditingFinished: {
                     parent.text = text
                     textField.visible = false
+                    mouseArea.visible = true
                 }
             }
 
@@ -78,23 +79,20 @@ ApplicationWindow {
                 id: mouseArea
                 anchors.fill: parent
                 visible: true
+                hoverEnabled: true
 
-                property int currentIndex: 0
+                property int nowIndex: 0
                 property int hoveredIndex : 0
                 property int newIndex : 0
-                hoverEnabled: true
 
                 // After drag, update position is wrong
                 function updateTabX() {
-//                    print("updateTabX width:" + window.width)
-
                     // Update x position.
                     // If no update x position and tab dragged to first position, mouse clicked position is wrong.
                     // Also if tab is dragged highly speed, tab alignment is wrong.
                     // Is this Qt bug? Because width is automatically updated.
                     for (var i = 0, len = tabBar.contentChildren.length, width = tabBar.width/len; i < len; ++i) {
                         tabBar.contentChildren[i].x =  i * width
-//                        print("i:" + i + ", x:" + tabBar.contentChildren[i].x + ", width:" + tabBar.contentChildren[i].width)
                     }
                     // Updating window size for alignment tab button.
                     window.width += 1
@@ -107,7 +105,6 @@ ApplicationWindow {
                 }
 
                 function closeTab(parent) {
-//                    print(hoveredIndex)
                     view.removeItem(view.itemAt(mouseArea.hoveredIndex))
                     tabBar.removeItem(tabBar.itemAt(mouseArea.hoveredIndex))
                     if (hoveredIndex == 0) tabBar.setCurrentIndex(0)
@@ -134,21 +131,51 @@ ApplicationWindow {
 
                     if (drag.active) {
                         // Tab position switching condition
-                        if ((currentIndex > 0) && (tabBar.contentChildren[currentIndex].x <= tabBar.contentChildren[currentIndex-1].x)) {
-                            newIndex = currentIndex - 1
-                        } else if ((currentIndex < tabBar.count-2) && (tabBar.contentChildren[currentIndex].x >= tabBar.contentChildren[currentIndex+1].x)) {
-                            newIndex = currentIndex + 1
+                        if ((nowIndex > 0) && (tabBar.contentChildren[nowIndex].x <= tabBar.contentChildren[nowIndex-1].x)) {
+                            newIndex = nowIndex - 1
+                        } else if ((nowIndex < tabBar.count-2) && (tabBar.contentChildren[nowIndex].x >= tabBar.contentChildren[nowIndex+1].x)) {
+                            newIndex = nowIndex + 1
                         }
 
                         // Update tab position
-                        if (currentIndex != newIndex) {
-                            tabBar.moveItem(currentIndex, newIndex)
-                            view.moveItem(currentIndex, newIndex)
+                        if (nowIndex != newIndex) {
+                            tabBar.moveItem(nowIndex, newIndex)
+                            view.moveItem(nowIndex, newIndex)
                             tabBar.setCurrentIndex(newIndex)
                             view.setCurrentIndex(newIndex)
-                            currentIndex = newIndex
+                            nowIndex = newIndex
                         }
                     }
+                }
+
+                drag.target: parent
+                drag.axis: Drag.XAxis
+
+                // Drag and move tab
+                onPositionChanged: {
+                    updateTabPosition()
+                }
+
+                // When released drag, fixing tab position.
+                onReleased: {
+                    if (!drag.active) return
+
+                    // var rightItem = tabBar.itemAt(nowIndex+1)
+                    // tabBar.currentItem.x = rightItem.x - tabBar.currentItem.width
+                    updateTabX()
+                }
+
+                onPressed: {
+                    tabBar.setCurrentIndex(hoveredIndex)
+                    nowIndex = hoveredIndex
+                }
+
+                // Change focus
+                onDoubleClicked: {
+                    tabBar.setCurrentIndex(hoveredIndex)
+                    mouseArea.visible = false
+                    textField.visible = true
+                    textField.focus = true
                 }
 
                 // Show close button
@@ -170,37 +197,6 @@ ApplicationWindow {
                     onClicked: {
                         parent.closeTab(parent)
                     }
-                }
-
-                // Change focus
-                onDoubleClicked: {
-                    tabBar.setCurrentIndex(hoveredIndex)
-                    textField.visible = true
-                    textField.focus = true
-                }
-
-                drag.target: parent
-                drag.axis: Drag.XAxis
-
-                onPressed: {
-                    var wp = mapToItem(tabBar, mouseX, mouseY)
-//                    print("i:" + tabBar.currentIndex + ", x:" + tabBar.currentItem.x +", width:" + tabBar.currentItem.width +", mouseX:" + mouseX +", wpx:" + wp.x)
-                    tabBar.setCurrentIndex(hoveredIndex)
-                    currentIndex = hoveredIndex
-                }
-
-                // Drag and move tab
-                onPositionChanged: {
-                    updateTabPosition()
-                }
-
-                // When released drag, fixing tab position.
-                onReleased: {
-                    if (!drag.active) return
-
-//                     var rightItem = tabBar.itemAt(currentIndex+1)
-//                     tabBar.currentItem.x = rightItem.x - tabBar.currentItem.width
-                    updateTabX()
                 }
             }
         }
