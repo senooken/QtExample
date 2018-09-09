@@ -54,7 +54,7 @@ ApplicationWindow {
 
     Component {
         id: tabButton
-        TabButton {            
+        TabButton {
             // Avoid moving right focus to add tab button.
             Keys.onRightPressed: {
                 if ( tabBar.currentIndex+2 < tabBar.count ) tabBar.incrementCurrentIndex()
