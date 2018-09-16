@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "qmake",
             "args": [
-                "main.pro", "&&", "make", "&&", "${workspaceFolder}/main.exe"
+                "&&", "make", "&&", "${workspaceFolder}/*.exe"
             ],
             "group": {
                 "kind": "build",
